@@ -6,14 +6,14 @@ commands:
         description: List of what you can do at your level
         aliases: [can, cando]
         usage: /lrcan [full]
-        permission-message: You don't have basic permission fool
+        permission-message: You don't have permission fool
     lrcant:
         description: a list of what you can't do
         aliases: [cant, cantdo, lrcant]
         usage: /lrcant [full]
-        permission-message: You don't have basic permission fool
+        permission-message: You don't have permission fool
     lrfull:
         description: a list of what you can and cannot do
         aliases: [full, rfull]
         usage: /lrfull [all]
-        permisson-message: You don't have permission for this!!  
+        permisson-message: You don't have permission for this

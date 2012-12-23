@@ -20,6 +20,10 @@ public class Commands implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
+		/**
+		 * Display can and cant messages in one
+		 * when user types /lrfull or /lrfull <name> is typed in console
+		 */
 		if (cmd.getName().equalsIgnoreCase("lrfull") ) {
 		
 			Integer argStart = 0;
@@ -63,8 +67,8 @@ public class Commands implements CommandExecutor {
 			
 			} else {
 				
-					cans = Info.getPlayerRestrictionMessage(player, RestrictionDisplayOptions.CAN_CURRENT, "do nothing");
-					cants = Info.getPlayerRestrictionMessage(player, RestrictionDisplayOptions.CANT_CURRENT, "be limited");					
+					cans = Info.getPlayerRestrictionMessage(player, RestrictionDisplayOptions.CAN_CURRENT, "");
+					cants = Info.getPlayerRestrictionMessage(player, RestrictionDisplayOptions.CANT_CURRENT, "");					
 				
 			}
 			
@@ -81,6 +85,10 @@ public class Commands implements CommandExecutor {
 			
 		}
 		
+		/**
+		 * Shows user what rules they do/don't qualify for when using
+		 * either /lrcan or /lrcant
+		 */
 		
 		if ( cmd.getName().equalsIgnoreCase("lrcan") || cmd.getName().equalsIgnoreCase("lrcant") ) {
 

@@ -1,28 +1,44 @@
-# the global default message displayed 
-# when user does not pass restrictions
+######################################
+# global default messages displayed 
+# when user is restricted in rule
 # Place holders are: %m = material, %max = max level, %min = min level
+######################################
 
 defaultMinMessage: You cannot use %m until level %min
 defaultMaxMessage: You cannot use %m past level %max
 defaultOtherMessage: You cannot use %m
 
+######################################
+# defaultDisplayCurrentRestrictions: true
+# will result in only the players current
+# restrictions being shown
+######################################
 defaultDisplayCurrentRestrictions: true
 
+
+######################################
+# Show restrictions when player joins
+######################################
 displayPlayerCanDoOnJoin: true
 displayPlayerCantDoOnJoin: true
 
+######################################
+# Show restrictions each time player
+# changes levels
+######################################
 displayPlayerCanDoOnLevelChange: true
 displayPlayerCantDoOnLevelChange: true
 
-
+######################################
 # If set to true, every action and item will
 # fail unless they explicitly qualify
-
+######################################
 defaultDenyUnlisted: false
 
-#===== Rule Format ====
+########## Rule Format ###############
 # 
 #    GroupName: unique name
+#        description: (optional) text to summarise rule
 #        minLevel: (optional) the minimum level player needs to be to qualify 
 #        maxLevel: (optional) the max level for player to qualify.
 #        lowMessage: (optional) override the defaultMinMessage with text.
@@ -31,9 +47,8 @@ defaultDenyUnlisted: false
 #            - options are: use, craft, pickup, break or place
 #        items: The item ids that this restriction applies to
 #            - itemids
-#===================================
-
-levelZeroWelcomeMessage: You are limited to wooden weapons and tools
+#
+######################################
 
 rules:
     stoneToolsAndWeapons:
