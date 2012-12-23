@@ -16,4 +16,4 @@ commands:
         description: a list of what you can and cannot do
         aliases: [full, rfull]
         usage: /lrfull [all]
-        permisson-message: You don't have permission for this!  
+        permisson-message: You don't have permission for this!!  
