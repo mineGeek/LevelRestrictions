@@ -24,12 +24,18 @@ public class RulesListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin( PlayerJoinEvent evt ) {
 		
+		/**
+		 * Show rules Player meets when they login
+		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCanDoOnJoin", true ) ) {
 		
 			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CAN, "") );
 			
 		}
 		
+		/**
+		 * Show rules Player doesn't meet when they login
+		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCantDoOnJoin", true ) ) {
 			
 			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "") );
@@ -42,12 +48,18 @@ public class RulesListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLevelChange( PlayerLevelChangeEvent evt ) {
 		
+		/**
+		 * Show rules Player now meets when level changes?
+		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCanDoOnLevelChange", true ) ) {
 			
 			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "") );
 			
 		}
 		
+		/**
+		 * Show rules Player does not meet when level changes?
+		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCantDoOnLevelChange", true ) ) {
 			
 			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "") );

@@ -19,9 +19,15 @@ public class PlayerMessenger {
 		 _plugin = thisPlugin;
 	}
 	
+	/**
+	 * Sends a message to the player but prevents spamming it to them
+	 * @param player
+	 * @param message
+	 */
 	public static void SendPlayerMessage(Player player, String message ) {
 		
 		Boolean printMessage = true;
+		//TODO: Make this a setting
 		Long benchMark = System.currentTimeMillis() - 1000;
 		
 		Map<String, Long> map = new HashMap<String, Long>();
@@ -42,7 +48,8 @@ public class PlayerMessenger {
 			player.sendMessage( message );
 		}
 		
-		if ( map.size() > 6 ) {
+		//TODO: Make this better!
+		if ( map.size() > 10 ) {
 			clean();
 		}
 		

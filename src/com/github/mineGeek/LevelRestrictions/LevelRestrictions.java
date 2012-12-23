@@ -21,14 +21,15 @@ public class LevelRestrictions extends JavaPlugin {
     @Override
     public void onEnable() {
     	
-    	LevelRestrictions.Rules = new Rules();
-    	LevelRestrictions.Config = new Configurator( this );
+    	LevelRestrictions.Rules 	= new Rules();
+    	LevelRestrictions.Config 	= new Configurator( this );
     	Bukkit.getPluginManager().registerEvents( new RulesListener(), this);
     	
     	_commands = new Commands( this );
     	
     	getCommand("lrcan").setExecutor( _commands );
     	getCommand("lrcant").setExecutor( _commands );
+    	getCommand("lrfull").setExecutor( _commands );
     	
     	getLogger().info( this.getName() + " enabled." );
     	
