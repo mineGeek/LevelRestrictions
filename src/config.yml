@@ -1,0 +1,158 @@
+# the global default message displayed 
+# when user does not pass restrictions
+# Place holders are: %m = material, %max = max level, %min = min level
+
+defaultMinMessage: You cannot use %m until level %min
+defaultMaxMessage: You cannot use %m past level %max
+defaultOtherMessage: You cannot use %m
+
+defaultDisplayCurrentRestrictions: true
+
+displayPlayerCanDoOnJoin: true
+displayPlayerCantDoOnJoin: true
+
+displayPlayerCanDoOnLevelChange: true
+displayPlayerCantDoOnLevelChange: true
+
+
+# If set to true, every action and item will
+# fail unless they explicitly qualify
+
+defaultDenyUnlisted: false
+
+#===== Rule Format ====
+# 
+#    GroupName: unique name
+#        minLevel: (optional) the minimum level player needs to be to qualify 
+#        maxLevel: (optional) the max level for player to qualify.
+#        lowMessage: (optional) override the defaultMinMessage with text.
+#        maxMessage: (optional) override the defaultMaxMessage with this text.
+#        actions: The actions this restriction applies to
+#            - options are: use, craft, pickup, break or place
+#        items: The item ids that this restriction applies to
+#            - itemids
+#===================================
+
+levelZeroWelcomeMessage: You are limited to wooden weapons and tools
+
+rules:
+    stoneToolsAndWeapons:
+        description: use Stone tools and weapons
+        minLevel: 2
+        actions:
+            - use
+            - craft
+            - pickup
+        items:
+            - 1
+            - 4
+            - 67
+            - 98
+            - 109
+            - 291
+            - 272
+            - 273
+            - 274
+            - 275
+    ironTools:
+        description: use Iron Tools
+        minLevel: 4
+        actions:
+            - use
+            - craft
+            - pickup
+        items:
+            - 256
+            - 257
+            - 258
+            - 292
+            - 265
+            - 42
+            - 15
+            - 71
+            - 101
+            
+    ironWeapons:
+        description: use Iron Weapons
+        minLevel: 5
+        minMessage: You cannot use %m until level %min
+        actions:
+            - use
+            - pickup
+            - craft
+        items:
+            - 267
+            - 306
+            - 307
+            - 308
+            - 309
+    diamondStuff:
+        description: use Diamond tools or weapons
+        minLevel: 8
+        minMessage: You cannot use %m until level %min
+        actions:
+            - use
+            - craft
+            - pickup
+            - break
+            - place
+        items:
+            - 56
+            - 57
+            - 293
+            - 264
+            - 276
+            - 277
+            - 278
+            - 279
+            - 310
+            - 311
+            - 312
+            - 313
+    woodWeaponsAndTools:
+        description: use Wooden tools or weapons
+        minLevel: 0
+        maxLevel: 2
+        maxMessage: you cannot use %m past level %max
+        actions:
+            - use
+            - craft
+        items:
+            - 268
+            - 269
+            - 270
+            - 271
+    GoldToolsAndWeapons:
+        description: use gold tools and weapons
+        minLevel: 3
+        actions:
+            - use
+            - craft
+            - pickup
+            - place
+            - break
+        items:
+            - 41
+            - 14
+            - 294
+            - 266
+            - 314
+            - 315
+            - 316
+            - 317
+            - 283
+            - 284
+            - 285
+            - 286
+    Banned:
+        description:
+        minLevel: 100
+        actions:
+            - use
+            - craft
+            - pickup
+            - place
+            - break
+        items:
+            - 46
+                       
