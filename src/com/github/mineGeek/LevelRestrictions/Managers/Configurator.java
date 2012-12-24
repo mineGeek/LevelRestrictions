@@ -70,6 +70,13 @@ public class Configurator {
     				
     			}
     			
+    			if ( _config.contains( path + ".factions" ) ) {
+    				
+    				List<String> factions = _config.getStringList( path + ".factions");
+    				rule.addFactions(factions);
+    				
+    			}    			
+    			
     			LevelRestrictions.Rules.addRule(rule);
     			
     		}

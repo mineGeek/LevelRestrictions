@@ -3,6 +3,7 @@ package com.github.mineGeek.LevelRestrictions;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.github.mineGeek.LevelRestrictions.Events.RulesListener;
+import com.github.mineGeek.LevelRestrictions.Integrators.FactionsPlayer;
 import com.github.mineGeek.LevelRestrictions.Managers.Commands;
 import com.github.mineGeek.LevelRestrictions.Managers.Configurator;
 import com.github.mineGeek.LevelRestrictions.Managers.Rules;
@@ -12,6 +13,7 @@ public class LevelRestrictions extends JavaPlugin {
 	public static Configurator Config;
 	public static Rules Rules;
 	private Commands _commands;
+	public static FactionsPlayer iFactions;
 	
     @Override
     public void onDisable() {
@@ -30,8 +32,13 @@ public class LevelRestrictions extends JavaPlugin {
     	getCommand("lrcan").setExecutor( _commands );
     	getCommand("lrcant").setExecutor( _commands );
     	getCommand("lrfull").setExecutor( _commands );
-    	
+    	getCommand("lrcreate").setExecutor( _commands );
+    	getCommand("lrkillrule").setExecutor( _commands );
+    	getCommand("lrdump").setExecutor( _commands );
+    	getCommand("lredit").setExecutor( _commands );
     	getLogger().info( this.getName() + " enabled." );
+    	
+    	LevelRestrictions.iFactions = new FactionsPlayer();
     	
     	
     }
