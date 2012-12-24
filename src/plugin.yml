@@ -1,6 +1,6 @@
 name: LevelRestrictions
 main: com.github.mineGeek.LevelRestrictions.LevelRestrictions
-version: 0.0.3
+version: 0.0.4
 commands:
     lrcan:
         description: List of what you can do at your level
@@ -17,3 +17,17 @@ commands:
         aliases: [full, rfull]
         usage: /lrfull [all]
         permisson-message: You don't have permission for this
+    lrcreate:
+        description: creates a new rule
+        usage: /lrcreate rulename
+        permission-message: You lack the skillz for this
+    lrkillrule:
+        description: deletes an existing rule
+        usage: /lrkillrule rulename
+        permission-message: DENIED!
+    lredit:
+        description: allows you to edit a rule.
+        usage: /lredit rulename [desc|min|max|addaction|removeaction|additem|removeitem] value
+        permission-message: fail. you no haz perms.
+    lrdump:
+        description: outputs rules to screen

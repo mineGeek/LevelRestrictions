@@ -9,8 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
-import com.github.mineGeek.LevelRestrictions.Managers.Rule;
-import com.github.mineGeek.LevelRestrictions.Managers.Rules;
+import com.github.mineGeek.LevelRestrictions.Rules.Rules;
+import com.github.mineGeek.LevelRestrictions.Rules.iRule;
 
 public class Info {
 
@@ -102,7 +102,7 @@ public class Info {
 	 */
 	public static List<String>getPlayerRestrictions( Player player, RestrictionDisplayOptions options ) {
 		
-		Iterator<Rule> i = Rules.getRules().iterator();
+		Iterator<iRule> i = Rules.getRules().iterator();
 		List<String> list = new ArrayList<String>();
 		
 		Boolean can = true;
@@ -146,29 +146,32 @@ public class Info {
 		
 		Boolean add = false;
 		Boolean couldDoPrevious = false;
+		Boolean canDoNow 		= false;
+		@SuppressWarnings("unused")
+		Boolean canDoNext		= false;
+
 		
 		while ( i.hasNext() ) {
 			
-			Rule rule = i.next();			
-			couldDoPrevious = level > 0 ? rule.levelOk( ( can ? level-1 : level + 1 ) ) : false;
+			iRule rule = i.next();			
+			
+			couldDoPrevious = level > 0 ? !rule.isRestricted(player, ( can ? level-1 : level + 1 ) ) : false;
+			canDoNow 		= level >= 0 ? !rule.isRestricted(player, level ) : false;
+			canDoNext		= !rule.isRestricted(player, ( !can ? level-1 : level + 1 ) );
 			
 			if ( !all ) {
-								
-				add = can ? !couldDoPrevious && rule.levelOk( level ) : couldDoPrevious && !rule.levelOk( level );
+				
+				add = can ? !couldDoPrevious && canDoNow : false;
 							
 				
 			} else {
-				add = rule.isMin(level);
-				add = rule.isMax(level);
 				
-				add = can ? !rule.isMin( level ) && !rule.isMax( level ) : rule.isMin( level ) || rule.isMax(level);
+				add = can ? canDoNow : !canDoNow;
 
 			}
 			
-			add = add ? !rule.isBypassed( player ) : false;	
-			
 			if ( add && rule.getDescription().length() > 0 ) {
-					list.add( rule.getDescription() );					
+				list.add( rule.getDescription() );					
 			}
 			
 		}
