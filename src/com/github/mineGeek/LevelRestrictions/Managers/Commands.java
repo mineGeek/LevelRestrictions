@@ -1,8 +1,5 @@
 package com.github.mineGeek.LevelRestrictions.Managers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
-import com.github.mineGeek.LevelRestrictions.Managers.Rule.Actions;
+import com.github.mineGeek.LevelRestrictions.Rules.Rule;
+import com.github.mineGeek.LevelRestrictions.Rules.Rules;
+import com.github.mineGeek.LevelRestrictions.Rules.Rule.Actions;
+import com.github.mineGeek.LevelRestrictions.Rules.iRule;
 import com.github.mineGeek.LevelRestrictions.Utilities.Info;
 import com.github.mineGeek.LevelRestrictions.Utilities.Info.RestrictionDisplayOptions;
 
@@ -58,7 +58,6 @@ public class Commands implements CommandExecutor {
 		this._plugin = plugin;
 	}
  
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
@@ -106,7 +105,7 @@ public class Commands implements CommandExecutor {
 				return false;
 			}
 			
-			Rule rule = Rules.getRule( ruleName );
+			iRule rule = Rules.getRule( ruleName );
 			
 			if ( rule == null ) {
 				sender.sendMessage("Rule " + ruleName + " doesn't exist.");

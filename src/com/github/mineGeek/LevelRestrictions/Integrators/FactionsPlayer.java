@@ -33,10 +33,7 @@ public class FactionsPlayer {
 	public static Boolean isInFaction( Player player, List<String> factions ) {
 		
 		if ( !enabled || factions == null ) return false;
-		FPlayer p = FPlayers.i.get(player);
-		String o = p.getFaction().getTag();
-		Boolean b =  factions.contains(p.getFaction().getTag() );
-		return b;
+		return  factions.contains( FPlayers.i.get(player).getFaction().getTag() );
 		
 	}
 	

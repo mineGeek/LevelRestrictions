@@ -6,7 +6,7 @@ import com.github.mineGeek.LevelRestrictions.Events.RulesListener;
 import com.github.mineGeek.LevelRestrictions.Integrators.FactionsPlayer;
 import com.github.mineGeek.LevelRestrictions.Managers.Commands;
 import com.github.mineGeek.LevelRestrictions.Managers.Configurator;
-import com.github.mineGeek.LevelRestrictions.Managers.Rules;
+import com.github.mineGeek.LevelRestrictions.Rules.Rules;
 
 public class LevelRestrictions extends JavaPlugin {
 

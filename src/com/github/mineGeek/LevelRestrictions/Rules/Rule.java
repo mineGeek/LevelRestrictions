@@ -1,4 +1,4 @@
-package com.github.mineGeek.LevelRestrictions.Managers;
+package com.github.mineGeek.LevelRestrictions.Rules;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,9 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.mineGeek.LevelRestrictions.Integrators.FactionsPlayer;
 
-public class Rule {
+public class Rule implements iRule {
 
 	private String _tag;
 	private String _description;
@@ -22,9 +21,26 @@ public class Rule {
 	private Boolean _default;
 	private List<Actions> _actions;
 	private List<Integer> _items;
-	private List<String> _factions;
 	
 	public enum Actions { CRAFT, USE, PLACE, BREAK, PICKUP }
+	
+	public Rule( Rule rule ) {
+		
+		this._items = new ArrayList<Integer>();
+		this._actions = new ArrayList<Actions>();
+		this.setTag( rule.getTag() );
+		this.setDescription( rule.getDescription() );
+		this.setMin( rule.getMin() );
+		this.setMax( rule.getMax() );
+		this.setMinMessage( rule.getMinMessage() );
+		this.setMaxMessage( rule.getMaxMessage() );
+		this.setOtherMessage( rule.getOtherMessage() );
+		this.setDefault( rule.getDefault() );
+		this.setActions( rule.getActions() );
+		
+		this.addItems( rule.getItems() );
+		
+	}
 	
 	public Rule() {
 		this._items = new ArrayList<Integer>();
@@ -72,30 +88,16 @@ public class Rule {
 		return this._max;
 	}
 	
-	public void addFaction( String faction ) {
-		this._factions.add( faction );
-	}
-	
-	public void addFactions( List<String> factions ) {
-		this._factions = factions;
-	}
-	
-	public List<String> getFactions() {
-		return this._factions;
-	}
-	
-	public Boolean isInFaction( Player player ) {		
-		
-		return FactionsPlayer.isInFaction(player, this._factions );
-		
-	}
-	
 	public void addAction( Actions action ) {
 		this._actions.add( action );
 	}
 	
 	public List<Actions> getActions() {
 		return this._actions;
+	}
+	
+	public void setActions( List<Actions> actions ) {
+		this._actions = actions;
 	}
 	
 	public String getActionsAsString() {
@@ -115,16 +117,29 @@ public class Rule {
 	}
 	
 	
+	
 	public void setMinMessage( String value ) {
 		this._minMessage = value;
+	}
+	
+	public String getMinMessage() {
+		return this._minMessage;
 	}
 	
 	public void setMaxMessage( String value ) {
 		this._maxMessage = value;
 	}
 	
+	public String getMaxMessage() {
+		return this._maxMessage;
+	}
+	
 	public void setOtherMessage( String value ) {
 		this._otherMessage = value;
+	}
+	
+	public String getOtherMessage() {
+		return this._otherMessage;
 	}
 	
 	public void removeAction( Actions action ) {
@@ -140,6 +155,10 @@ public class Rule {
 	}
 	
 	public void addItems( List<Integer> items ) {
+		this._items = items;
+	}
+	
+	public void setItems( List<Integer> items) {
 		this._items = items;
 	}
 	
@@ -246,15 +265,8 @@ public class Rule {
 	
 	public Boolean isRestricted( Player player, Integer level ) {
 		
-		Boolean restricted = false;
-		
 		if ( this.isBypassed(player) ) return false;
-		restricted = !this.levelOk(level);
-		restricted = restricted && !this.isInFaction(player);
-		
-		
-		return restricted;
-		
+		return !this.levelOk(level);		
 		
 	}
 	
@@ -267,7 +279,7 @@ public class Rule {
 		sender.sendMessage( min + max );
 		sender.sendMessage( " actions: " + this._actions.toString() );
 		sender.sendMessage( " items: " + this._items.toString() );
-		sender.sendMessage(" factions: " + ( this._factions != null ? this._factions.toString() : "none" ) );
+		
 		
 		
 		
