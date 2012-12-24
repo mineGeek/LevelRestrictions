@@ -186,7 +186,7 @@ public class Rule {
 			
 		if ( !this.appliesToAction( action ) ) 				return false;		
 		if ( !this.appliesToItem( material.getId() ) ) 		return false;		
-		if ( !player.hasPermission("levelrestrictions.rules.bypass." + this.getTag() ) ) 	return false;		
+		if ( this.isBypassed( player ) ) 					return false;		
 		if ( this.isMin( player ) ) return true;
 		if ( this.isMax( player ) ) return true;
 		

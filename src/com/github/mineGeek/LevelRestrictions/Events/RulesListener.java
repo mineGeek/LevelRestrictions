@@ -24,12 +24,14 @@ public class RulesListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin( PlayerJoinEvent evt ) {
 		
+		String message = "";
 		/**
 		 * Show rules Player meets when they login
 		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCanDoOnJoin", true ) ) {
 		
-			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CAN, "") );
+			message = Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CAN, "");
+			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
 		}
 		
@@ -38,7 +40,8 @@ public class RulesListener implements Listener {
 		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCantDoOnJoin", true ) ) {
 			
-			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "") );
+			message = Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "");
+			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
 		}		
 
@@ -48,12 +51,14 @@ public class RulesListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLevelChange( PlayerLevelChangeEvent evt ) {
 		
+		String message = "";
 		/**
 		 * Show rules Player now meets when level changes?
 		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCanDoOnLevelChange", true ) ) {
 			
-			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CAN, "") );
+			message =  Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CAN, "");
+			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
 		}
 		
@@ -62,7 +67,8 @@ public class RulesListener implements Listener {
 		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCantDoOnLevelChange", true ) ) {
 			
-			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "") );
+			message = Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "");
+			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
 		}
 		

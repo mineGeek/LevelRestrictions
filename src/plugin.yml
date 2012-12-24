@@ -1,6 +1,6 @@
 name: LevelRestrictions
 main: com.github.mineGeek.LevelRestrictions.LevelRestrictions
-version: 0.0.1
+version: 0.0.3
 commands:
     lrcan:
         description: List of what you can do at your level

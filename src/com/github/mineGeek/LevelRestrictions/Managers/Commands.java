@@ -42,7 +42,7 @@ public class Commands implements CommandExecutor {
 					}
 					
 				} else {
-					sender.sendMessage("This command can only be run by a player.");
+					sender.sendMessage("You didn't specify the Player name. e.g. /lrfull notch");
 					return false;
 				}
 				
@@ -108,7 +108,7 @@ public class Commands implements CommandExecutor {
 					}
 					
 				} else {
-					sender.sendMessage("This command can only be run by a player.");
+					sender.sendMessage("This command can only be run on a player. e.g. /can Notch");
 					return false;
 				}
 				
@@ -133,12 +133,12 @@ public class Commands implements CommandExecutor {
 				} else if ( args[ argStart ].equalsIgnoreCase("current" ) ) {
 					
 					options = can ? RestrictionDisplayOptions.CAN_CURRENT : RestrictionDisplayOptions.CANT_CURRENT;
-					emptyMessage = can ? "nothing new" : "have any new restrictions";
+					emptyMessage = can ? "nothing new" : "have any new restrictions (at this level)";
 						
 				} else if ( args[ argStart ].equalsIgnoreCase("previous") ) {
 					
 					options = can ? RestrictionDisplayOptions.CAN_PREVIOUS : RestrictionDisplayOptions.CANT_PREVIOUS;
-					emptyMessage = can ? "nothing new" : "have any new restrictions";
+					emptyMessage = can ? "nothing new" : "have any new restrictions (at previous level)";
 						
 				} else if ( args[argStart].equalsIgnoreCase("next") ) {
 					
