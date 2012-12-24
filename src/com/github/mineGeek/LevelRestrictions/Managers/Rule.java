@@ -176,7 +176,9 @@ public class Rule {
 	
 	public Boolean isBypassed( Player player ) {
 		
-		return !player.hasPermission("levelrestrictions.rules.bypass." + this.getTag() );
+		Boolean ted = player.hasPermission("levelrestrictions.rules.bypass." + this.getTag() );
+		return ted;
+		
 		
 	}
 	

@@ -53,7 +53,7 @@ public class RulesListener implements Listener {
 		 */
 		if ( LevelRestrictions.Config.getConfigFile().getBoolean("displayPlayerCanDoOnLevelChange", true ) ) {
 			
-			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "") );
+			evt.getPlayer().sendMessage( Info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CAN, "") );
 			
 		}
 		

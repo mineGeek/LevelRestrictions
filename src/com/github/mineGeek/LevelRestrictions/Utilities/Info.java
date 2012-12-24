@@ -155,7 +155,7 @@ public class Info {
 			if ( !all ) {
 								
 				add = can ? !couldDoPrevious && rule.levelOk( level ) : couldDoPrevious && !rule.levelOk( level );
-				add = add ? !rule.isBypassed( player ) : false;				
+							
 				
 			} else {
 				add = rule.isMin(level);
@@ -164,6 +164,8 @@ public class Info {
 				add = can ? !rule.isMin( level ) && !rule.isMax( level ) : rule.isMin( level ) || rule.isMax(level);
 
 			}
+			
+			add = add ? !rule.isBypassed( player ) : false;	
 			
 			if ( add && rule.getDescription().length() > 0 ) {
 					list.add( rule.getDescription() );					
