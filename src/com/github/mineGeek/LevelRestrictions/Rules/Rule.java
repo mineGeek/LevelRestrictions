@@ -1,12 +1,15 @@
-package com.github.mineGeek.LevelRestrictions.Managers;
+package com.github.mineGeek.LevelRestrictions.Rules;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Rule {
+
+public class Rule implements iRule {
 
 	private String _tag;
 	private String _description;
@@ -20,6 +23,24 @@ public class Rule {
 	private List<Integer> _items;
 	
 	public enum Actions { CRAFT, USE, PLACE, BREAK, PICKUP }
+	
+	public Rule( Rule rule ) {
+		
+		this._items = new ArrayList<Integer>();
+		this._actions = new ArrayList<Actions>();
+		this.setTag( rule.getTag() );
+		this.setDescription( rule.getDescription() );
+		this.setMin( rule.getMin() );
+		this.setMax( rule.getMax() );
+		this.setMinMessage( rule.getMinMessage() );
+		this.setMaxMessage( rule.getMaxMessage() );
+		this.setOtherMessage( rule.getOtherMessage() );
+		this.setDefault( rule.getDefault() );
+		this.setActions( rule.getActions() );
+		
+		this.addItems( rule.getItems() );
+		
+	}
 	
 	public Rule() {
 		this._items = new ArrayList<Integer>();
@@ -55,24 +76,70 @@ public class Rule {
 		this._min = value;
 	}
 	
+	public Integer getMin() {
+		return this._min;
+	}
+	
 	public void setMax( Integer value ) {
 		this._max = value;
+	}
+	
+	public Integer getMax() {
+		return this._max;
 	}
 	
 	public void addAction( Actions action ) {
 		this._actions.add( action );
 	}
 	
+	public List<Actions> getActions() {
+		return this._actions;
+	}
+	
+	public void setActions( List<Actions> actions ) {
+		this._actions = actions;
+	}
+	
+	public String getActionsAsString() {
+
+		Iterator<Actions> i = this._actions.iterator();
+		String result = "";
+		while ( i.hasNext() ) {
+			if ( result.length() > 0 ) result = result + ", ";
+			result = result + i.next().toString();
+		}
+		
+		return "[" + result + "]";
+	}
+	
+	public List<Integer> getItems() {
+		return this._items;
+	}
+	
+	
+	
 	public void setMinMessage( String value ) {
 		this._minMessage = value;
+	}
+	
+	public String getMinMessage() {
+		return this._minMessage;
 	}
 	
 	public void setMaxMessage( String value ) {
 		this._maxMessage = value;
 	}
 	
+	public String getMaxMessage() {
+		return this._maxMessage;
+	}
+	
 	public void setOtherMessage( String value ) {
 		this._otherMessage = value;
+	}
+	
+	public String getOtherMessage() {
+		return this._otherMessage;
 	}
 	
 	public void removeAction( Actions action ) {
@@ -88,6 +155,10 @@ public class Rule {
 	}
 	
 	public void addItems( List<Integer> items ) {
+		this._items = items;
+	}
+	
+	public void setItems( List<Integer> items) {
 		this._items = items;
 	}
 	
@@ -185,12 +256,32 @@ public class Rule {
 	public Boolean isRestricted( Actions action, Material material, Player player ) {
 			
 		if ( !this.appliesToAction( action ) ) 				return false;		
-		if ( !this.appliesToItem( material.getId() ) ) 		return false;		
-		if ( this.isBypassed( player ) ) 					return false;		
-		if ( this.isMin( player ) ) return true;
-		if ( this.isMax( player ) ) return true;
+		if ( !this.appliesToItem( material.getId() ) ) 		return false;
+		if ( this.isRestricted(player, player.getLevel() ) )return true;
 		
 		return this.getDefault();
+		
+	}
+	
+	public Boolean isRestricted( Player player, Integer level ) {
+		
+		if ( this.isBypassed(player) ) return false;
+		return !this.levelOk(level);		
+		
+	}
+	
+	public void dumpRuleToSender( CommandSender sender ) {
+		
+		sender.sendMessage( this.getTag() );
+		sender.sendMessage(" description: " + this.getDescription() );
+		String min = this._min > 0 ? " min level: " + this._min.toString() : "";
+		String max = this._max > 0 ? " max level: " + this._max.toString() : "";
+		sender.sendMessage( min + max );
+		sender.sendMessage( " actions: " + this._actions.toString() );
+		sender.sendMessage( " items: " + this._items.toString() );
+		
+		
+		
 		
 	}
 	

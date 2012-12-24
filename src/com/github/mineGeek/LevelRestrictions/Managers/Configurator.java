@@ -4,7 +4,11 @@ import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
-import com.github.mineGeek.LevelRestrictions.Managers.Rule.Actions;
+import com.github.mineGeek.LevelRestrictions.Rules.FactionsRule;
+import com.github.mineGeek.LevelRestrictions.Rules.Rule;
+import com.github.mineGeek.LevelRestrictions.Rules.Rules;
+import com.github.mineGeek.LevelRestrictions.Rules.Rule.Actions;
+import com.github.mineGeek.LevelRestrictions.Rules.iRule;
 
 
 public class Configurator {
@@ -28,6 +32,7 @@ public class Configurator {
     
     private void loadConfig() {
 
+    	
     	LevelRestrictions.Rules = new Rules();
     	
     	String defaultMinMessage = _config.getString("defaultMinMessage", "");
@@ -40,9 +45,15 @@ public class Configurator {
     		for( String tag: _config.getConfigurationSection("rules").getKeys( false ) ) {
     			
     			String path = "rules." + tag;
+    			iRule rule;
+    			if ( _config.contains( path + ".factions" ) ) {
+    				rule = new FactionsRule();
+    			} else {
+    				rule = new Rule();
+    			}
     			
-    			Rule rule = new Rule();
-    			rule.setTag( tag );
+    			
+				rule.setTag( tag );
     			rule.setDescription( _config.getString(path + ".description", ""));
     			rule.setDefault( _config.getBoolean( path + ".denyUnlisted", defaultDenyUnlisted ) );
     			rule.setMin( _config.getInt( path + ".minLevel", 0) );
@@ -69,6 +80,13 @@ public class Configurator {
     				rule.addItems( items );
     				
     			}
+    			
+    			if ( rule instanceof FactionsRule ) {
+    				
+    				List<String> factions = _config.getStringList( path + ".factions");
+    				((FactionsRule) rule).addFactions(factions);
+    				
+    			}    			
     			
     			LevelRestrictions.Rules.addRule(rule);
     			

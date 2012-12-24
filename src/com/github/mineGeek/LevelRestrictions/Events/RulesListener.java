@@ -13,8 +13,8 @@ import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
-import com.github.mineGeek.LevelRestrictions.Managers.Rules;
-import com.github.mineGeek.LevelRestrictions.Managers.Rule.Actions;
+import com.github.mineGeek.LevelRestrictions.Rules.Rules;
+import com.github.mineGeek.LevelRestrictions.Rules.Rule.Actions;
 import com.github.mineGeek.LevelRestrictions.Utilities.Info;
 import com.github.mineGeek.LevelRestrictions.Utilities.Info.RestrictionDisplayOptions;
 
