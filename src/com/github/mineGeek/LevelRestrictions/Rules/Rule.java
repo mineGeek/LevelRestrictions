@@ -8,6 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
+
 
 public class Rule implements iRule {
 
@@ -21,11 +23,13 @@ public class Rule implements iRule {
 	private Boolean _default;
 	private List<Actions> _actions;
 	private List<Integer> _items;
+	private LevelRestrictions plugin;
 	
 	public enum Actions { CRAFT, USE, PLACE, BREAK, PICKUP }
 	
 	public Rule( Rule rule ) {
 		
+		this.plugin = rule.plugin;
 		this._items = new ArrayList<Integer>();
 		this._actions = new ArrayList<Actions>();
 		this.setTag( rule.getTag() );
@@ -42,7 +46,8 @@ public class Rule implements iRule {
 		
 	}
 	
-	public Rule() {
+	public Rule( LevelRestrictions plugin ) {
+		this.plugin = plugin;
 		this._items = new ArrayList<Integer>();
 		this._actions = new ArrayList<Actions>();
 	}
@@ -193,7 +198,7 @@ public class Rule implements iRule {
 	
 	public Boolean levelOk( Player player ) {
 	
-		return levelOk( player.getLevel() );
+		return levelOk( this.plugin.players.player( player ).getLevel() );
 		
 	}
 	
@@ -205,32 +210,32 @@ public class Rule implements iRule {
 	
 	public Boolean willMin( Player player ) {
 		
-		return isMin( player )  && !isMin( player.getLevel() + 1 );
+		return isMin( player )  && !isMin( this.plugin.players.player( player ).getLevel() + 1 );
 		
 	}
 	
 	public Boolean willMax( Player player ) {
-		return isMax( player ) && !isMax( player.getLevel() + 1 );
+		return isMax( player ) && !isMax( this.plugin.players.player( player ).getLevel() + 1 );
 	}
 	
 	public Boolean wasMin( Player player ) {
 		
-		return isMin( player ) && !isMin( player.getLevel() - 1 );
+		return isMin( player ) && !isMin( this.plugin.players.player( player ).getLevel() - 1 );
 		
 	}
 	
 	public Boolean wasMax( Player player ) {
 		
-		return isMax( player ) && !isMax( player.getLevel() - 1 );
+		return isMax( player ) && !isMax( this.plugin.players.player( player ).getLevel() - 1 );
 		
 	}
 	
 	public Boolean isMin( Player player ) {
-		return isMin( player.getLevel() );
+		return isMin(  this.plugin.players.player( player ).getLevel() );
 	}
 	
 	public Boolean isMax( Player player ) {
-		return isMax( player.getLevel() );
+		return isMax( this.plugin.players.player( player ).getLevel() );
 	}	
 	
 	public Boolean isMin( Integer level ) {
@@ -253,11 +258,17 @@ public class Rule implements iRule {
 		
 	}
 	
+	public Boolean isNA( Player player ) {
+		
+		return isBypassed( player );
+		
+	}
+	
 	public Boolean isRestricted( Actions action, Material material, Player player ) {
-			
+		
 		if ( !this.appliesToAction( action ) ) 				return false;		
 		if ( !this.appliesToItem( material.getId() ) ) 		return false;
-		if ( this.isRestricted(player, player.getLevel() ) )return true;
+		if ( this.isRestricted(player, this.plugin.players.player( player ).getLevel() ) )return true;
 		
 		return this.getDefault();
 		
@@ -265,7 +276,7 @@ public class Rule implements iRule {
 	
 	public Boolean isRestricted( Player player, Integer level ) {
 		
-		if ( this.isBypassed(player) ) return false;
+		if ( this.isNA(player) ) return false;
 		return !this.levelOk(level);		
 		
 	}
@@ -274,8 +285,8 @@ public class Rule implements iRule {
 		
 		sender.sendMessage( this.getTag() );
 		sender.sendMessage(" description: " + this.getDescription() );
-		String min = this._min > 0 ? " min level: " + this._min.toString() : "";
-		String max = this._max > 0 ? " max level: " + this._max.toString() : "";
+		String min = this.getMin() != null && this.getMin() > 0 ? " min level: " + this.getMin().toString() : "";
+		String max = this.getMax() != null && this.getMax() > 0 ? " max level: " + this.getMax().toString() : "";
 		sender.sendMessage( min + max );
 		sender.sendMessage( " actions: " + this._actions.toString() );
 		sender.sendMessage( " items: " + this._items.toString() );

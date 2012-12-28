@@ -39,6 +39,7 @@ public interface iRule {
 	public void removeAction( Actions action );
 	public List<Integer> getItems();
 	public void removeItem( Integer itemId );
-
+	public Boolean isNA( Player player );
+	public Boolean levelOk( Integer level );
 	
 }
