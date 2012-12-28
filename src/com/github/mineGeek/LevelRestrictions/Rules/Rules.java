@@ -10,111 +10,91 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
 import com.github.mineGeek.LevelRestrictions.Managers.PlayerMessenger;
 import com.github.mineGeek.LevelRestrictions.Rules.Rule.Actions;
 
 public class Rules {
 
-	private static List<iRule> _rules;
-	private static Map<String, iRule> _ruleMap = new HashMap<String, iRule>();
+	@SuppressWarnings("unused")
+	private LevelRestrictions 	_plugin;
+	private List<iRule> 		_rules 		= new ArrayList<iRule>();
+	private Map<String, iRule> 	_ruleMap 	= new HashMap<String, iRule>();
 	
-	public Rules() {
-		Rules._rules = new ArrayList<iRule>();
+	
+	public Rules( LevelRestrictions plugin ) {
+		
+		_rules = new ArrayList<iRule>();
+		this._plugin = plugin;
+		
 	}
 	
-	public static List<iRule>getRules() {
-		return _rules;
+	public Rules() {
+		
+		_rules = new ArrayList<iRule>();
+		_ruleMap.clear();
+		
+	}
+	
+	public List<iRule>getRules() {
+		
+		return this._rules;
+		
+	}
+	
+	public void addRule( String ruleName, iRule rule ) {
+		
+		this.removeRule(ruleName);
+		this._rules.add( rule );
+		this._ruleMap.put( ruleName, rule );
+		
 	}
 	
 	public void addRule( iRule rule ) {
 		
-		_rules.add( rule );
-		_ruleMap.put( rule.getTag().toLowerCase(), rule);
+		this._rules.add( rule );
+		this._ruleMap.put( rule.getTag().toLowerCase(), rule);
 	}
 	
-	public static void removeRule( String ruleName ) {
+	public void removeRule( String ruleName ) {
 		
-		iRule rule = _ruleMap.get(ruleName);
-		_rules.remove( rule );
-		_ruleMap.remove( ruleName );
+		iRule rule = this._ruleMap.get(ruleName);
+		this._rules.remove( rule );
+		this._ruleMap.remove( ruleName );
 		
 	}
 	
-	public static void dumpRules( CommandSender sender ) {
+	public void dumpRules( CommandSender sender ) {
 		
-		Iterator<iRule> i = _rules.iterator();
+		Iterator<iRule> i = this._rules.iterator();
 		
 		while ( i.hasNext() ) {
+			
 			i.next().dumpRuleToSender( sender );
+			
 		}
+		
 		
 	}
 	
-	public static iRule getRule( String ruleName ) {
-		return _ruleMap.get( ruleName.toLowerCase() );
+	public iRule getRule( String ruleName ) {
+		
+		return this._ruleMap.get( ruleName.toLowerCase() );
+		
 	}
 	
 	public void clear() {
-		_rules.clear();
+		
+		this._ruleMap.clear();
+		this._rules.clear();
+		
 	}
-	/*
-	public static String getWhatPlayerCanDo( Player player ) {
-		
-		Iterator<iRule> i = _rules.iterator();
-		String message = "";		
-		
-		while ( i.hasNext() ) {
-			iRule rule = i.next();
-			
-			if ( !rule.isMin(player) || rule.isMax(player)) {
 
-				if ( rule.getDescription().length() > 0 ) {
-				
-					if ( message.length() > 0 ) {
-						message = message.concat(", " + rule.getDescription() );
-					} else {
-						message = message.concat( rule.getDescription() );
-					}
-					
-				}
-			}
-		}
-		
-		return message;
-		
-	}
-	
-	public static String getWhatPlayerCannotDo( Player player ) {
-		
-		Iterator<Rule> i = _rules.iterator();
-		String message = "";
-		
-		while ( i.hasNext() ) {
-			Rule rule = i.next();
-			
-			if ( rule.isMin(player) || rule.isMax(player)) {
-
-				if ( rule.getDescription().length() > 0 ) {
-				
-					if ( message.length() > 0 ) {
-						message = message.concat(", " + rule.getDescription() );
-					} else {
-						message = message.concat( rule.getDescription() );
-					}
-					
-				}
-			}
-		}
-		
-		return message;		
-		
-	}
-	*/
-	public static Boolean isRestricted(Actions action, Material material, Player player ) {
+	public Boolean isRestricted(Actions action, Material material, Player player ) {
 		
 		Boolean result = false;
 		
-		Iterator<iRule> i = _rules.iterator();
+		Iterator<iRule> i = this._rules.iterator();
 		
 		while( i.hasNext() ) {
 			

@@ -6,22 +6,20 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
 import com.github.mineGeek.LevelRestrictions.Integrators.FactionsPlayer;
 
 public class FactionsRule extends Rule implements iRule {
 
 	private List<String> _factions;
 	
-	public FactionsRule() {
-		super();
-	}
 	
-	public FactionsRule( Rule rule ) {
-		super( rule );
+	public FactionsRule( LevelRestrictions plugin ) {
+		super( plugin );
 		this._factions = new ArrayList<String>();
 	}
 	
-	public FactionsRule( FactionsRule rule ) {
+	public FactionsRule( LevelRestrictions plugin, FactionsRule rule ) {
 		super( rule );
 		this._factions = rule.getFactions();
 	}
@@ -51,12 +49,14 @@ public class FactionsRule extends Rule implements iRule {
 		
 	}
 	
+	public Boolean isNA( Player player ) {
+		return !this.isInFaction(player);
+	}
+	
 	public Boolean isRestricted( Player player, Integer level ) {
 		
-		Boolean inFaction = this.isInFaction(player);
-		Boolean isRestricted = super.isRestricted(player, level);
-		Boolean result = isRestricted || inFaction;
-		return result;		
+		if ( this.isNA( player ) ) return false;
+		return super.isRestricted(player, level);		
 		
 	}	
 }

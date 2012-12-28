@@ -2,43 +2,56 @@ package com.github.mineGeek.LevelRestrictions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.github.minGeek.LevelRestrictions.Commands.CreateRule;
+import com.github.minGeek.LevelRestrictions.Commands.Dump;
+import com.github.minGeek.LevelRestrictions.Commands.EditRule;
+import com.github.minGeek.LevelRestrictions.Commands.KillRule;
+import com.github.minGeek.LevelRestrictions.Commands.RulesAvailable;
+import com.github.minGeek.LevelRestrictions.Commands.RulesFull;
+import com.github.mineGeek.LevelRestrictions.DataStore.PlayerStore;
 import com.github.mineGeek.LevelRestrictions.Events.RulesListener;
 import com.github.mineGeek.LevelRestrictions.Integrators.FactionsPlayer;
-import com.github.mineGeek.LevelRestrictions.Managers.Commands;
 import com.github.mineGeek.LevelRestrictions.Managers.Configurator;
 import com.github.mineGeek.LevelRestrictions.Rules.Rules;
+import com.github.mineGeek.LevelRestrictions.Utilities.Info;
 
 public class LevelRestrictions extends JavaPlugin {
 
-	public static Configurator Config;
-	public static Rules Rules;
-	private Commands _commands;
-	public static FactionsPlayer iFactions;
+	public 	Configurator config;
+	public 	Info 		info;
+	public 	Rules 		rules;
+	public	PlayerStore players = new PlayerStore( this );
 	
     @Override
     public void onDisable() {
+    	this.config.saveConfig();
+    	this.players.saveOnline();
         getLogger().info( this.getName() + " disabled." );
     }	
     
     @Override
     public void onEnable() {
     	
-    	LevelRestrictions.Rules 	= new Rules();
-    	LevelRestrictions.Config 	= new Configurator( this );
-    	Bukkit.getPluginManager().registerEvents( new RulesListener(), this);
+		this.rules = new Rules( this );
+		this.info = new Info( this );
+    	this.config = new Configurator( this );
     	
-    	_commands = new Commands( this );
+    	Bukkit.getPluginManager().registerEvents( new RulesListener( this ), this);
+
+    	RulesAvailable ra = new RulesAvailable( this );
+    	getCommand("lrcan").setExecutor( ra );
+    	getCommand("lrcant").setExecutor( ra );
+    	getCommand("lrfull").setExecutor( new RulesFull( this ) );
+    	getCommand("lrcreate").setExecutor( new CreateRule( this ) );
+    	getCommand("lrkillrule").setExecutor( new KillRule( this ) );
+    	getCommand("lrdump").setExecutor( new Dump( this ) );
+    	getCommand("lredit").setExecutor( new EditRule( this ) );
     	
-    	getCommand("lrcan").setExecutor( _commands );
-    	getCommand("lrcant").setExecutor( _commands );
-    	getCommand("lrfull").setExecutor( _commands );
-    	getCommand("lrcreate").setExecutor( _commands );
-    	getCommand("lrkillrule").setExecutor( _commands );
-    	getCommand("lrdump").setExecutor( _commands );
-    	getCommand("lredit").setExecutor( _commands );
-    	getLogger().info( this.getName() + " enabled." );
+    	this.players.loadOnline();
+    	FactionsPlayer.FactionsPlayerEnable();
+    	getLogger().info( this.getName() + " enabled with " + this.rules.getRules().size() + " rules loaded." );
     	
-    	LevelRestrictions.iFactions = new FactionsPlayer();
     	
     	
     }
