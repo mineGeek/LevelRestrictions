@@ -14,17 +14,17 @@ public class FactionsPlayer {
 
 	public static boolean enabled = false;
 	
-	public FactionsPlayer()
+	public static void FactionsPlayerEnable()
 	{
 		Plugin plugin = Bukkit.getPluginManager().getPlugin("Factions");
 		
 		if (plugin == null || ! plugin.isEnabled())
 		{
-			Bukkit.getLogger().info("Factions integration not enabled");
+			Bukkit.getLogger().info("Factions integration for LevelRestrictions not enabled");
 			enabled = false;
 
 		} else {
-			Bukkit.getLogger().info("Factions integration is enabled");
+			Bukkit.getLogger().info("Factions integration for LevelRestrictions is enabled");
 			enabled = true;
 		}
 		
@@ -41,5 +41,22 @@ public class FactionsPlayer {
 		FPlayer p = FPlayers.i.get( player );
 		return ( p.getFactionId() == factionName );
 	}
+	
+	public static Double getPower( Player player ) {
+		FPlayer p = FPlayers.i.get( player );
+		return p.getPower();
+	}
+	
+	public static Boolean isPowerMin( Player player, Integer power ) {
+		FPlayer p = FPlayers.i.get( player );
+		return p.getPowerMinRounded() > power;
+	}
+	
+	public static Boolean isPowerMax( Player player, Integer power ) {
+		FPlayer p = FPlayers.i.get( player );
+		return p.getPowerMaxRounded() > power;
+	}	
+	
+
 	
 }

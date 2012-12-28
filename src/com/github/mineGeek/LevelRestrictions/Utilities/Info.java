@@ -9,11 +9,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
-import com.github.mineGeek.LevelRestrictions.Rules.Rules;
 import com.github.mineGeek.LevelRestrictions.Rules.iRule;
 
 public class Info {
 
+	LevelRestrictions plugin;
+	
+	public Info( LevelRestrictions plugin ) {
+		this.plugin = plugin;
+	}
+	
 	public static enum RestrictionDisplayOptions { CAN, CAN_ALL, CAN_PREVIOUS, CAN_NEXT, CAN_CURRENT, CANT, CANT_ALL, CANT_PREVIOUS, CANT_NEXT, CANT_CURRENT };
 	
 	/**
@@ -24,10 +29,13 @@ public class Info {
 	 * @param suffix
 	 * @return
 	 */
-	private static String getDisplayList( List<String> list, String prefix, ChatColor color, String suffix ) {
+	private String getDisplayList( List<String> list, String prefix, ChatColor color ) {
+		
 		
 		String message = "";
 		String next = "";
+		
+		if ( list == null ) return message;
 		
 		Iterator<String> i = list.iterator();
 		
@@ -37,9 +45,8 @@ public class Info {
 			
 			if ( message.length() > 0 ) {
 			
-				//TODO: localise and give option to list or append
 				if ( i.hasNext() ) {
-					message = message.concat( "," );
+					message = message.concat( ", " );
 				} else if ( !i.hasNext() ) {
 					message = message.concat( " and ");
 				}
@@ -53,131 +60,104 @@ public class Info {
 		if ( message.length() > 0 ) {
 			
 			if ( prefix.length() > 0 ) message = prefix.concat( " " ) + message;
-			if ( suffix.length() > 0 ) message = message.concat( " ".concat( suffix ) );
 			
 		
 		}
 		
-		return color + message;
+		if ( message.length() > 0 ) {
+			return color + message;
+		} else {
+			return message;
+		}
 		
 		
 	}
 	
-	/**
-	 * Generates and returns string for player restrictions
-	 * @param player
-	 * @param options
-	 * @param emptyMessage
-	 * @return
-	 */
-	public static String getPlayerRestrictionMessage( Player player, RestrictionDisplayOptions options, String emptyMessage ) {
 		
-		List<String> list;
-		list = getPlayerRestrictions( player, options );
+	public String getPlayerRestrictionsCurrent( Player player, Boolean canDos ) {
 		
-		if ( list.isEmpty() && emptyMessage.length() > 0 ) {
-			list.add( emptyMessage );
-		}
-		
-		String message = "";
-		
-		//TODO: localise prefixes
-		switch ( options ) {
-			case CAN: case CAN_ALL: case CAN_CURRENT: case CAN_PREVIOUS: case CAN_NEXT:
-				message = getDisplayList( list, "You can:", ChatColor.GREEN, "" );
-				break;
-			default:
-				message = getDisplayList( list, "You can't:", ChatColor.RED, "" );
-		}
-		
-		return message;
+		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.candoNextPrefix;
+		ChatColor color = canDos ? ChatColor.GREEN : ChatColor.YELLOW;
+		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getLevel(), canDos, this.plugin.players.player(player).getLevel() + 1 ) , prefix , color);
 		
 	}
-
-	/**
-	 * Gets list of all applicable restrictions
-	 * @param player
-	 * @param options
-	 * @return
-	 */
-	public static List<String>getPlayerRestrictions( Player player, RestrictionDisplayOptions options ) {
+	
+	public String getPlayerRestrictionsPrevious( Player player, Boolean canDos ) {
 		
-		Iterator<iRule> i = Rules.getRules().iterator();
+		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.cantdoPrefix;
+		ChatColor color = canDos ? ChatColor.GREEN : ChatColor.RED;		
+		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getPreviousLevel(), canDos ) , prefix, color);
+		
+	}
+	
+	public String getPlayerRestrictionsNext( Player player, Boolean canDos ) {
+		
+		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.candoNextPrefix;
+		ChatColor color = canDos ? ChatColor.YELLOW : ChatColor.RED;		
+		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getLevel() + 1, canDos ) , prefix, color);
+		
+	}
+	
+	public String getPlayerRestrictionsAll( Player player, Boolean canDos ) {
+		
+		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.cantdoPrefix;
+		ChatColor color = canDos ? ChatColor.GREEN : ChatColor.RED;		
+		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getLevel(), canDos, true, 0 ) , prefix, color);
+		
+	}	
+	
+	public List<String> getPlayerRestrictions( Player player, Integer level, Boolean canDos, Integer nextLevel ) {
+		return this.getPlayerRestrictions(player, level, canDos, false, nextLevel );
+	}	
+	
+	public List<String> getPlayerRestrictions( Player player, Integer level, Boolean canDos ) {
+		return this.getPlayerRestrictions(player, level, canDos, false, 0 );
+	}
+
+	public List<String> getPlayerRestrictions( Player player, Integer level, Boolean canDos, Boolean doAll, Integer nextLevel ) {
+		
 		List<String> list = new ArrayList<String>();
-		
-		Boolean can = true;
-		Boolean all = LevelRestrictions.Config.getConfigFile().getBoolean("defaultDisplayCurrentRestrictions", true );
-		Integer level = player.getLevel();
-		
-		switch ( options ) {
-			case CAN:
-				break;
-			case CAN_CURRENT:
-				all = false;
-				break;
-			case CAN_ALL:
-				all = true;
-				break;
-			case CAN_PREVIOUS:
-				level--;
-				break;
-			case CAN_NEXT:
-				level++;
-				break;
-			case CANT:
-				can = false;
-				break;
-			case CANT_CURRENT:
-				can = false;
-				all = false;
-				break;
-			case CANT_ALL:
-				can = false;
-				all = true;
-				break;
-			case CANT_PREVIOUS:
-				level--;
-				can = false;
-				break;
-			case CANT_NEXT:
-				level++;
-				can = false;		
-		}
-		
-		Boolean add = false;
-		Boolean couldDoPrevious = false;
-		Boolean canDoNow 		= false;
-		@SuppressWarnings("unused")
-		Boolean canDoNext		= false;
-
+		Iterator<iRule> i = this.plugin.rules.getRules().iterator();
 		
 		while ( i.hasNext() ) {
 			
-			iRule rule = i.next();			
+			iRule rule = i.next();
 			
-			couldDoPrevious = level > 0 ? !rule.isRestricted(player, ( can ? level-1 : level + 1 ) ) : false;
-			canDoNow 		= level >= 0 ? !rule.isRestricted(player, level ) : false;
-			canDoNext		= !rule.isRestricted(player, ( !can ? level-1 : level + 1 ) );
-			
-			if ( !all ) {
+			if ( !rule.isNA( player ) ) {
 				
-				add = can ? !couldDoPrevious && canDoNow : false;
-							
-				
-			} else {
-				
-				add = can ? canDoNow : !canDoNow;
+				if ( doAll ) {
+					
+					if ( canDos && rule.levelOk(level) ) {
+						
+						list.add( rule.getDescription() );
 
-			}
-			
-			if ( add && rule.getDescription().length() > 0 ) {
-				list.add( rule.getDescription() );					
+					} else if ( !canDos && !rule.levelOk(level) ) {
+						
+						list.add( rule.getDescription() );
+						
+					}
+					
+				} else {
+					if ( rule.isRestricted( player, level ) ) {
+						if ( !canDos ) {
+							if ( nextLevel > 0 ) {
+								if ( !rule.isRestricted( player, nextLevel ) ) list.add( rule.getDescription() );
+							} else {
+								list.add( rule.getDescription() );
+							}
+						}
+					} else if ( canDos ) {
+	
+							list.add( rule.getDescription() );
+					}
+				}
+				
 			}
 			
 		}
 		
-		return list;		
+		return list;
 		
 	}
-
+	
 }

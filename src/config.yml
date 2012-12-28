@@ -22,18 +22,35 @@ defaultDisplayCurrentRestrictions: true
 displayPlayerCanDoOnJoin: true
 displayPlayerCantDoOnJoin: true
 
+candoPrefix: 'You can use '
+cantdoPrefix: 'You currently cannot use '
+candoNowPrefix: 'You can now use '
+candoNextPrefix: 'Next level you will be able to use '
+candoPreviousPrefix: 'You used to be able to use '
+cantdoPreviousPrefix: 'You used to be unable to '
+
 ######################################
 # Show restrictions each time player
 # changes levels
 ######################################
 displayPlayerCanDoOnLevelChange: true
-displayPlayerCantDoOnLevelChange: true
+displayPlayerCantDoOnLevelChange: false
+displayPlayerCanDoNowOnLevelChange: true
+displayPlayerCanDoNextOnLevelChange: true
 
 ######################################
 # If set to true, every action and item will
 # fail unless they explicitly qualify
 ######################################
 defaultDenyUnlisted: false
+
+######################################
+# If you want the players item access level
+# to grow with their level, but to never reduce
+# then set playerKeepItemLevelOnXPLoss to true; 
+# (e.g. player dies at xp level 4, they will still have access to lvl 4 items)
+# ####################################
+playerKeepItemLevelOnXPLoss: false
 
 ########## Rule Format ###############
 # 
@@ -51,13 +68,22 @@ defaultDenyUnlisted: false
 ######################################
 
 rules:
-    stoneToolsAndWeapons:
-        description: use Stone tools and weapons
-        minLevel: 2
+    woodTools:
+        description: wood tools/swords
+        maxLevel: 2
         actions:
             - use
-            - craft
-            - pickup
+        items:
+            - 268
+            - 269
+            - 270
+            - 271
+            - 290
+    stoneToolsAndWeapons:
+        description: stone tools/sword
+        minLevel: 1
+        actions:
+            - use
         items:
             - 1
             - 4
@@ -70,12 +96,13 @@ rules:
             - 274
             - 275
     ironTools:
-        description: use Iron Tools
-        minLevel: 4
+        description: iron tools
+        minLevel: 2
         actions:
             - use
             - craft
             - pickup
+            - break
         items:
             - 256
             - 257
@@ -86,10 +113,31 @@ rules:
             - 15
             - 71
             - 101
-            
+    GoldToolsAndWeapons:
+        description: gold tools/sword
+        minLevel: 3
+        actions:
+            - use
+            - craft
+            - pickup
+            - place
+            - break
+        items:
+            - 41
+            - 14
+            - 294
+            - 266
+            - 314
+            - 315
+            - 316
+            - 317
+            - 283
+            - 284
+            - 285
+            - 286            
     ironWeapons:
-        description: use Iron Weapons
-        minLevel: 5
+        description: iron sword/armor
+        minLevel: 4
         minMessage: You cannot use %m until level %min
         actions:
             - use
@@ -102,8 +150,8 @@ rules:
             - 308
             - 309
     diamondStuff:
-        description: use Diamond tools or weapons
-        minLevel: 8
+        description: diamond tools/armor/swords
+        minLevel: 5
         minMessage: You cannot use %m until level %min
         actions:
             - use
@@ -124,44 +172,9 @@ rules:
             - 311
             - 312
             - 313
-    woodWeaponsAndTools:
-        description: use Wooden tools or weapons
-        minLevel: 0
-        maxLevel: 2
-        maxMessage: you cannot use %m past level %max
-        actions:
-            - use
-            - craft
-        items:
-            - 268
-            - 269
-            - 270
-            - 271
-    GoldToolsAndWeapons:
-        description: use gold tools and weapons
-        minLevel: 3
-        actions:
-            - use
-            - craft
-            - pickup
-            - place
-            - break
-        items:
-            - 41
-            - 14
-            - 294
-            - 266
-            - 314
-            - 315
-            - 316
-            - 317
-            - 283
-            - 284
-            - 285
-            - 286
     Banned:
-        description:
         minLevel: 100
+        minMessage: You cannot use TNT
         actions:
             - use
             - craft
