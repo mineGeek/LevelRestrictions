@@ -124,41 +124,23 @@ public class EditRule extends CommandBase {
 			
 		} else if ( action == "additem" ) {
 			
-			Integer item = Integer.parseInt( value );
+			String item = value;
 			
-			if ( item == null ) {
-				
-				execMessage = value + " is not a valid item. It needs to be the item id (e.g. 237 )";
-				result = false;
-				
-			} else {				
-				
-				String was = rule.getItems().toString();
-				rule.addItem( item );
-				plugin.getConfig().set( path + "items", rule.getItems() );
-				plugin.saveConfig();
-				execMessage = "Items changed from " + was + " to " + rule.getItems().toString();
-				
-			}
+			String was = rule.getItems().toString();
+			rule.addItem( item );
+			plugin.getConfig().set( path + "items", rule.getItems() );
+			plugin.saveConfig();
+			execMessage = "Items changed from " + was + " to " + rule.getItems().toString();
 			
 		} else if ( action == "removeitem" ) {
 			
-			Integer item = Integer.parseInt( value );
+			String item = value;
 			
-			if ( item == null ) {
-				
-				execMessage = value + " is not a valid item. It needs to be the item id (e.g. 237 )";
-				return false;
-				
-			} else {
-				
-				String was = rule.getItems().toString();
-				rule.removeItem( item );
-				plugin.getConfig().set( path + "items", rule.getItems() );
-				plugin.saveConfig();
-				execMessage = "Items changed from " + was + " to " + rule.getItems().toString();
-				
-			}
+			String was = rule.getItems().toString();
+			rule.removeItem( item );
+			plugin.getConfig().set( path + "items", rule.getItems() );
+			plugin.saveConfig();
+			execMessage = "Items changed from " + was + " to " + rule.getItems().toString();
 			
 		}			
 			

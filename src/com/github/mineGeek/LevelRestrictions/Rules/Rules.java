@@ -16,11 +16,11 @@ import com.github.mineGeek.LevelRestrictions.Rules.Rule.Actions;
 
 public class Rules {
 
-	@SuppressWarnings("unused")
 	private LevelRestrictions 	_plugin;
-	private List<iRule> 		_rules 		= new ArrayList<iRule>();
-	private Map<String, iRule> 	_ruleMap 	= new HashMap<String, iRule>();
-	
+	private List<iRule> 		_rules 			= new ArrayList<iRule>();
+	private Map<String, iRule> 	_ruleMap 		= new HashMap<String, iRule>();
+	private List<String>		_xworlds		= new ArrayList<String>();
+	private Boolean 			_defaultDeny 	= false;
 	
 	public Rules( LevelRestrictions plugin ) {
 		
@@ -40,6 +40,19 @@ public class Rules {
 		
 		return this._rules;
 		
+	}
+	
+	public void setDefaultDeny( Boolean value ) {
+		this._defaultDeny = value;
+	}
+	
+	
+	public void addExcludedWorldName( String value ) {
+		this._xworlds.add( value );
+	}
+	
+	public Boolean isExcludedWorld( String worldName ) {
+		return this._xworlds.contains( worldName );
 	}
 	
 	public void addRule( String ruleName, iRule rule ) {
@@ -87,45 +100,64 @@ public class Rules {
 		
 		this._ruleMap.clear();
 		this._rules.clear();
+		this._xworlds.clear();
 		
 	}
 
-	public Boolean isRestricted(Actions action, Material material, Player player ) {
+	public Boolean isRestricted(Actions action, Material material, byte data, Player player ) {
 		
+		if ( this.isExcludedWorld( player.getWorld().getName() ) ) return false;
+
 		Boolean result = false;
-		
+		//System.out.print(material.getData());
 		Iterator<iRule> i = this._rules.iterator();
-		
+		Boolean wasApplicable = false;
+
 		while( i.hasNext() ) {
 			
 			iRule rule = i.next();
 			String message;
-			
-			if ( rule.isRestricted(action, material, player ) ) {
-				
-				if ( rule.isMin( player ) ) {
-					
-					message = rule.getMinMessage(material);
-					
-				} else if ( rule.isMax(player)) {
-					
-					message = rule.getMaxMessage(material);
-					
-				} else {
-					
-					message = rule.getOtherMessage(material);
-					
+			if ( !rule.isNA( player ) ) {
+				if ( rule.isApplicable(action, material, data, player)) {
+					wasApplicable = true;
+					if ( rule.isRestricted(action, material, data, player ) ) {
+						
+						if ( rule.isMin( player ) ) {
+							
+							message = rule.getMinMessage(material);
+							
+						} else if ( rule.isMax(player)) {
+							
+							message = rule.getMaxMessage(material);
+							
+						} else {
+							
+							message = rule.getOtherMessage(material);
+							
+						}
+						
+						PlayerMessenger.SendPlayerMessage( player, message);
+						
+						result = true;
+						break;
+						
+					}
 				}
-				
-				PlayerMessenger.SendPlayerMessage( player, message);
-				
-				result = true;
-				break;
-				
 			}
 			
 		}
 		
+		if ( !result && (!wasApplicable && this._defaultDeny ) ) {
+			if ( !player.hasPermission("levelrestrictions.rules.bypass")) {
+				
+				String message = this._plugin.config.defaultOtherMessage;
+				message = message.replace("%m", material.toString().replace("_", " ").toLowerCase() );						
+				
+				PlayerMessenger.SendPlayerMessage(player, message );
+				result = true;
+			}
+		}
+		if ( result ) System.out.print( player.getName() + " to " + material.getId() + " -- " + data);
 		return result;
 		
 	}
