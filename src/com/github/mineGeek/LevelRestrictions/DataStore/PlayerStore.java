@@ -9,49 +9,49 @@ import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
 
 public class PlayerStore {
 
-	private Map<String, PlayerStoreItem>_players = new HashMap<String, PlayerStoreItem>();
-	public String dataFolder;
-	public Boolean active = false;	
-	private LevelRestrictions plugin;
+	private static 	Map<String, PlayerStoreItem>players = new HashMap<String, PlayerStoreItem>();
+	public 	static 	String dataFolder;
+	public 	static 	Boolean active = false;	
+	private static 	LevelRestrictions plugin;
 	
-	public PlayerStore( LevelRestrictions plugin ) {
-		this.plugin = plugin;
+	public static void setPlugin( LevelRestrictions plugin ) {
+		PlayerStore.plugin = plugin;
 	}
 	
-	public PlayerStoreItem player( Player player ) {
-		return this.player( player.getName() );
+	public static PlayerStoreItem player( Player player ) {
+		return player( player.getName() );
 	}
 	
-	public PlayerStoreItem player( String playerName ) {
-		return _players.get( playerName );
+	public static PlayerStoreItem player( String playerName ) {
+		return players.get( playerName );
 	}
 	
-	public void addPlayer( Player player ) {
-		_players.put(player.getName(), new PlayerStoreItem( this.plugin, player ) );
+	public static void addPlayer( Player player ) {
+		players.put( player.getName(), new PlayerStoreItem( plugin, player ) );
 	}
 	
-	public void removePlayer( Player player ) {
-		_players.get(player.getName()).save();
-		_players.remove( player.getName() );
+	public static void removePlayer( Player player ) {
+		players.get(player.getName()).save();
+		players.remove( player.getName() );
 	}
 	
-	public void loadOnline() {
+	public static void loadOnline() {
 		
-		if ( this.plugin.getServer().getOnlinePlayers().length > 0 ) {
+		if ( plugin.getServer().getOnlinePlayers().length > 0 ) {
 		
-			for( Player p : this.plugin.getServer().getOnlinePlayers() ) {
-				this.addPlayer( p );
+			for( Player p : plugin.getServer().getOnlinePlayers() ) {
+				addPlayer( p );
 			}
 			
 		}
 	}
 	
-	public void saveOnline() {
+	public static void saveOnline() {
 		
-		if ( this.plugin.getServer().getOnlinePlayers().length > 0 ) {
+		if ( plugin.getServer().getOnlinePlayers().length > 0 ) {
 		
-			for( Player p : this.plugin.getServer().getOnlinePlayers() ) {
-				this.player( p.getName() ).save() ;
+			for( Player p : plugin.getServer().getOnlinePlayers() ) {
+				player( p.getName() ).save() ;
 			}
 			
 		}

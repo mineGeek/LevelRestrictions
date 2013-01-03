@@ -16,6 +16,14 @@ public class PlayerStoreItem extends DataStore {
 		
 	}
 	
+	public void incrimentLevel( Integer level ) {
+		this.setLevel( this.getLevel() + level );
+	}
+	
+	public void incrimentLevel() {
+		this.incrimentLevel( 1 );
+	}
+	
 	public void setLevel( Integer level ) {
 		this.set("level", level);
 	}

@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.minGeek.LevelRestrictions.Commands.CreateRule;
 import com.github.minGeek.LevelRestrictions.Commands.Dump;
 import com.github.minGeek.LevelRestrictions.Commands.EditRule;
+import com.github.minGeek.LevelRestrictions.Commands.ItemLevel;
 import com.github.minGeek.LevelRestrictions.Commands.KillRule;
 import com.github.minGeek.LevelRestrictions.Commands.RulesAvailable;
 import com.github.minGeek.LevelRestrictions.Commands.RulesFull;
@@ -21,21 +22,22 @@ public class LevelRestrictions extends JavaPlugin {
 	public 	Configurator config;
 	public 	Info 		info;
 	public 	Rules 		rules;
-	public	PlayerStore players = new PlayerStore( this );
 	
     @Override
     public void onDisable() {
     	this.config.saveConfig();
-    	this.players.saveOnline();
+    	PlayerStore.saveOnline();
         getLogger().info( this.getName() + " disabled." );
     }	
     
     @Override
     public void onEnable() {
     	
+    	PlayerStore.setPlugin( this );
 		this.rules = new Rules( this );
 		this.info = new Info( this );
     	this.config = new Configurator( this );
+    	
     	
     	Bukkit.getPluginManager().registerEvents( new RulesListener( this ), this);
 
@@ -47,8 +49,9 @@ public class LevelRestrictions extends JavaPlugin {
     	getCommand("lrkillrule").setExecutor( new KillRule( this ) );
     	getCommand("lrdump").setExecutor( new Dump( this ) );
     	getCommand("lredit").setExecutor( new EditRule( this ) );
+    	getCommand("lrlevel").setExecutor( new ItemLevel( this ) );
     	
-    	this.players.loadOnline();
+    	PlayerStore.loadOnline();
     	FactionsPlayer.FactionsPlayerEnable();
     	getLogger().info( this.getName() + " enabled with " + this.rules.getRules().size() + " rules loaded." );
     	

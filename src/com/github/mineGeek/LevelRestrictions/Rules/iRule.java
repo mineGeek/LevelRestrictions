@@ -22,9 +22,9 @@ public interface iRule {
 	public void setMinMessage( String value );
 	public void setMaxMessage( String value );
 	public void setOtherMessage( String value );
-	public void addItem( Integer itemId );
-	public void addItems( List<Integer> items );
-	public Boolean isRestricted( Actions action, Material material, Player player );
+	public void addItem( String itemId );
+	public void addItems( List<String> items );
+	public Boolean isRestricted( Actions action, Material material, byte data, Player player );
 	public Boolean isMin( Integer level );
 	public Boolean isMax( Integer level );
 	public Boolean isMin( Player player );
@@ -37,9 +37,14 @@ public interface iRule {
 	public Integer getMin();
 	public List<Actions> getActions();
 	public void removeAction( Actions action );
-	public List<Integer> getItems();
-	public void removeItem( Integer itemId );
+	public List<String> getItems();
+	public void removeItem( String itemId );
 	public Boolean isNA( Player player );
 	public Boolean levelOk( Integer level );
+	public void setMinSet( Boolean value );
+	public void setMaxSet( Boolean value );
+	public Boolean isApplicable( Actions action, Material material, byte data, Player player );
+	public String getActionText();
+	public void setActionText( String value );
 	
 }

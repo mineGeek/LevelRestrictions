@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
+import com.github.mineGeek.LevelRestrictions.DataStore.PlayerStore;
 import com.github.mineGeek.LevelRestrictions.Rules.iRule;
 
 public class Info {
@@ -78,7 +79,7 @@ public class Info {
 		
 		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.candoNextPrefix;
 		ChatColor color = canDos ? ChatColor.GREEN : ChatColor.YELLOW;
-		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getLevel(), canDos, this.plugin.players.player(player).getLevel() + 1 ) , prefix , color);
+		return this.getDisplayList( this.getPlayerRestrictions( player, PlayerStore.player(player).getLevel(), canDos, PlayerStore.player(player).getLevel() + 1 ) , prefix , color);
 		
 	}
 	
@@ -86,7 +87,7 @@ public class Info {
 		
 		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.cantdoPrefix;
 		ChatColor color = canDos ? ChatColor.GREEN : ChatColor.RED;		
-		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getPreviousLevel(), canDos ) , prefix, color);
+		return this.getDisplayList( this.getPlayerRestrictions( player, PlayerStore.player(player).getPreviousLevel(), canDos ) , prefix, color);
 		
 	}
 	
@@ -94,7 +95,7 @@ public class Info {
 		
 		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.candoNextPrefix;
 		ChatColor color = canDos ? ChatColor.YELLOW : ChatColor.RED;		
-		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getLevel() + 1, canDos ) , prefix, color);
+		return this.getDisplayList( this.getPlayerRestrictions( player, PlayerStore.player(player).getLevel() + 1, canDos ) , prefix, color);
 		
 	}
 	
@@ -102,7 +103,7 @@ public class Info {
 		
 		String prefix = canDos ? this.plugin.config.candoNowPrefix : this.plugin.config.cantdoPrefix;
 		ChatColor color = canDos ? ChatColor.GREEN : ChatColor.RED;		
-		return this.getDisplayList( this.getPlayerRestrictions( player, this.plugin.players.player(player).getLevel(), canDos, true, 0 ) , prefix, color);
+		return this.getDisplayList( this.getPlayerRestrictions( player, PlayerStore.player(player).getLevel(), canDos, true, 0 ) , prefix, color);
 		
 	}	
 	
@@ -117,6 +118,9 @@ public class Info {
 	public List<String> getPlayerRestrictions( Player player, Integer level, Boolean canDos, Boolean doAll, Integer nextLevel ) {
 		
 		List<String> list = new ArrayList<String>();
+		
+		if ( this.plugin.rules.isExcludedWorld( player.getWorld().getName().toLowerCase() ) ) return list;
+		
 		Iterator<iRule> i = this.plugin.rules.getRules().iterator();
 		
 		while ( i.hasNext() ) {
