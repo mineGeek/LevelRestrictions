@@ -1,6 +1,7 @@
 package com.github.mineGeek.LevelRestrictions.Managers;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -100,6 +101,8 @@ public class Configurator {
 		rule.setOtherMessage( _config.getString( path + ".otherMessage", defaultOtherMessage ) );
 		
 		if ( _config.contains(path + ".actions") ) {
+			String actionText = null;
+			String actionItem = null;
 			
 			List<String> actions = _config.getStringList( path + ".actions" );
 			
@@ -109,11 +112,39 @@ public class Configurator {
 			if ( actions.contains("craft") ) rule.addAction( Actions.CRAFT );
 			if ( actions.contains("pickup") ) rule.addAction( Actions.PICKUP );
 			
+			Iterator<String> ac = actions.iterator();
+			
+			while( ac.hasNext() ) {
+				
+				actionItem = ac.next();
+				
+				if ( ac.hasNext() ) {
+					
+					if ( actionText == null ) {
+						actionText = actionItem;
+					} else {
+						actionText = ", " + actionItem;
+					}
+					
+				} else {
+					
+					if ( actionText == null ) {
+						actionText = actionItem;
+					} else {
+						actionText = actionText + " or " + actionItem;
+					}
+				}
+				
+			}
+			
+			
+			rule.setActionText( actionText );
+			
 		}
 		
 		if ( _config.contains( path + ".items" ) ) {
 			
-			List<Integer> items = _config.getIntegerList( path + ".items");
+			List<String> items = _config.getStringList( path + ".items");
 			rule.addItems( items );
 			
 		}  			
@@ -125,6 +156,15 @@ public class Configurator {
     public void loadRules() {
     	
     	plugin.rules.clear();
+    	plugin.rules.setDefaultDeny( _config.getBoolean( "defaultDenyUnlisted", false ) );
+    	
+    	if ( _config.contains("excludedWorlds") ) {
+    		
+    		for ( String name: _config.getStringList("excludedWorlds") ) {
+    			plugin.rules.addExcludedWorldName(name.toLowerCase());
+    		}
+    		
+    	}
     	
     	if ( _config.contains("rules") ) {
     		
