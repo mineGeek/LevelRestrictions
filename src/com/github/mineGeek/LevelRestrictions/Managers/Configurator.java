@@ -160,8 +160,8 @@ public class Configurator {
     	
     	if ( _config.contains("excludedWorlds") ) {
     		
-    		for ( String name: _config.getConfigurationSection("excludedWorlds").getKeys(false) ) {
-    			plugin.rules.addExcludedWorldName(name);
+    		for ( String name: _config.getStringList("excludedWorlds") ) {
+    			plugin.rules.addExcludedWorldName(name.toLowerCase());
     		}
     		
     	}

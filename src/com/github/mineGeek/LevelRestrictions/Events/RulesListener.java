@@ -1,6 +1,5 @@
 package com.github.mineGeek.LevelRestrictions.Events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
+import com.github.mineGeek.LevelRestrictions.DataStore.PlayerStore;
 import com.github.mineGeek.LevelRestrictions.Rules.Rule.Actions;
 
 
@@ -46,7 +46,6 @@ public class RulesListener implements Listener {
 						evt.setCancelled( true );
 					}
 				} catch ( Exception e ) {
-					System.out.print("Exception in OnEntityDamage" );
 					e.printStackTrace();
 				}
 			}
@@ -58,13 +57,12 @@ public class RulesListener implements Listener {
 	public void onPlayerJoin( PlayerJoinEvent evt ) {
 		
 		String message = null;
-		this.plugin.players.addPlayer( evt.getPlayer() );
+		PlayerStore.addPlayer( evt.getPlayer() );
 		/**
 		 * Show rules Player meets when they login
 		 */
 		if ( this.plugin.config.getConfigFile().getBoolean("displayPlayerCanDoOnJoin", true ) ) {
 		
-			//message = this.plugin.info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CAN, "");
 			message = this.plugin.info.getPlayerRestrictionsCurrent( evt.getPlayer(), true );
 			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
@@ -76,39 +74,31 @@ public class RulesListener implements Listener {
 		 */
 		if ( this.plugin.config.getConfigFile().getBoolean("displayPlayerCantDoOnJoin", true ) ) {
 			
-			//message = this.plugin.info.getPlayerRestrictionMessage(evt.getPlayer(), RestrictionDisplayOptions.CANT, "");
 			message = this.plugin.info.getPlayerRestrictionsCurrent( evt.getPlayer(), false );
 			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
 		}
 		
 		
-		
-		
-		
-		//Bukkit.getLogger().info( evt.getEventName() + " :: Player Level:" + evt.getPlayer().getLevel() + " Store: " + this.plugin.players.player(evt.getPlayer()).getLevel() );
-		
 	}
 	
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent evt )
     {
-    	//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getPlayer().getName() );
-    	this.plugin.players.removePlayer( evt.getPlayer() );
+    	PlayerStore.removePlayer( evt.getPlayer() );
     }
 	
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLevelChange( PlayerLevelChangeEvent evt ) {
 		
-		//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getPlayer().getName() );
-		this.plugin.players.player( evt.getPlayer() ).setLevel( evt.getPlayer().getLevel(), this.plugin.config.playerKeepItemLevelOnXPLoss );
+		PlayerStore.player( evt.getPlayer() ).setLevel( evt.getPlayer().getLevel(), this.plugin.config.playerKeepItemLevelOnXPLoss );
 		String message = null;
 		/**
 		 * Show rules Player now meets when level changes?
 		 */
 		if ( this.plugin.config.displayPlayerCanDoNowOnLevelChange ) {
-			//message =  this.plugin.info.getPlayerCurrentRestrictionMessage( evt.getPlayer(), true );
+
 			message = this.plugin.info.getPlayerRestrictionsCurrent( evt.getPlayer(), true );
 			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
@@ -119,24 +109,20 @@ public class RulesListener implements Listener {
 		 */
 		if ( this.plugin.config.displayPlayerCanDoNextOnLevelChange ) {
 			
-			//message =  this.plugin.info.getPlayerCurrentRestrictionMessage( evt.getPlayer(), false );
 			message = this.plugin.info.getPlayerRestrictionsCurrent( evt.getPlayer(), false );
 			if ( message.length() > 0 ) evt.getPlayer().sendMessage( message );
 			
 		}
 		
-		
-		Bukkit.getLogger().info( evt.getEventName() + " :: Player Level:" + evt.getPlayer().getLevel() + " Store: " + this.plugin.players.player(evt.getPlayer()).getLevel() );
+
 	}	
 	
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractBlock(PlayerInteractEvent evt){
         
-    	//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getPlayer().getName() );
     	
     	if ( evt.isCancelled() ) return;
     	
-    	//if ( plugin.rules.isRestricted( Actions.USE, evt.getClickedBlock().getType(), evt.getClickedBlock().getData(),  evt.getPlayer() ) ) {
     	try {
 	    	if ( evt.getItem() != null && evt.getItem().getType() != null ) {
 	    	
@@ -145,7 +131,7 @@ public class RulesListener implements Listener {
 	    		}
 	    	}
     	} catch (Exception e ) {
-    		System.out.print("Exception in onPlayerInteractBlock");
+
     		e.printStackTrace();
     	}
     	
@@ -154,7 +140,6 @@ public class RulesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEntity(PlayerInteractEvent evt){
         
-    	//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getPlayer().getName() );
     	
     	if ( evt.isCancelled() ) return;
     	
@@ -164,13 +149,10 @@ public class RulesListener implements Listener {
     		Material m = is.getType();
     		byte b = evt.getItem().getData().getData();
     	
-    		System.out.print( m + " - " + b );
-    	
     		if ( plugin.rules.isRestricted( Actions.USE, m, b, evt.getPlayer() ) ) {
     			evt.setCancelled( true );
     		}
     	} catch ( Exception e ) {
-    		System.out.print("woah");
     		e.printStackTrace();
     	}
     	
@@ -184,7 +166,7 @@ public class RulesListener implements Listener {
     	if(evt.isCancelled()) return;
     	
     	if ( evt.getWhoClicked() instanceof Player ) {
-    		//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getWhoClicked().getName() );
+
 	    	if ( plugin.rules.isRestricted( Actions.CRAFT, evt.getRecipe().getResult().getType(), evt.getRecipe().getResult().getData().getData(),  (Player)evt.getWhoClicked() ) ) {
 	    		evt.setCancelled( true );
 	    	}    	
@@ -197,11 +179,9 @@ public class RulesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockDestroy(BlockBreakEvent evt)
     {
-    
-    	//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getPlayer().getName() );
     	
     	if(evt.isCancelled()) return;
-    	//System.out.print(" -- " + evt.getBlock().getData() );
+
     	if ( plugin.rules.isRestricted( Actions.BREAK, evt.getBlock().getType(), evt.getBlock().getData(), evt.getPlayer() ) ) {
     		evt.setCancelled( true );
     	}
@@ -214,7 +194,6 @@ public class RulesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockPlaceEvent evt)
     {
-    	//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getPlayer().getName() );
     	
         if(evt.isCancelled()) return;
 
@@ -227,7 +206,6 @@ public class RulesListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPickup(PlayerPickupItemEvent evt)
     {
-    	//Bukkit.getLogger().info( evt.getEventName() + " " + evt.getPlayer().getName() );
     	
         if(evt.isCancelled()) return;
         

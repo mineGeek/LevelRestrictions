@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.mineGeek.LevelRestrictions.LevelRestrictions;
+import com.github.mineGeek.LevelRestrictions.DataStore.PlayerStore;
 
 
 public class Rule implements iRule {
@@ -221,7 +222,7 @@ public class Rule implements iRule {
 	
 	public Boolean levelOk( Player player ) {
 	
-		return levelOk( this.plugin.players.player( player ).getLevel() );
+		return levelOk( PlayerStore.player( player ).getLevel() );
 		
 	}
 	
@@ -233,32 +234,32 @@ public class Rule implements iRule {
 	
 	public Boolean willMin( Player player ) {
 		
-		return isMin( player )  && !isMin( this.plugin.players.player( player ).getLevel() + 1 );
+		return isMin( player )  && !isMin( PlayerStore.player( player ).getLevel() + 1 );
 		
 	}
 	
 	public Boolean willMax( Player player ) {
-		return isMax( player ) && !isMax( this.plugin.players.player( player ).getLevel() + 1 );
+		return isMax( player ) && !isMax( PlayerStore.player( player ).getLevel() + 1 );
 	}
 	
 	public Boolean wasMin( Player player ) {
 		
-		return isMin( player ) && !isMin( this.plugin.players.player( player ).getLevel() - 1 );
+		return isMin( player ) && !isMin( PlayerStore.player( player ).getLevel() - 1 );
 		
 	}
 	
 	public Boolean wasMax( Player player ) {
 		
-		return isMax( player ) && !isMax( this.plugin.players.player( player ).getLevel() - 1 );
+		return isMax( player ) && !isMax( PlayerStore.player( player ).getLevel() - 1 );
 		
 	}
 	
 	public Boolean isMin( Player player ) {
-		return isMin(  this.plugin.players.player( player ).getLevel() );
+		return isMin(  PlayerStore.player( player ).getLevel() );
 	}
 	
 	public Boolean isMax( Player player ) {
-		return isMax( this.plugin.players.player( player ).getLevel() );
+		return isMax( PlayerStore.player( player ).getLevel() );
 	}	
 	
 	public Boolean isMin( Integer level ) {
@@ -308,7 +309,7 @@ public class Rule implements iRule {
 	public Boolean isRestricted( Actions action, Material material, byte data, Player player ) {
 		
 
-		if ( this.isRestricted(player, this.plugin.players.player( player ).getLevel() ) ) return true;
+		if ( this.isRestricted(player, PlayerStore.player( player ).getLevel() ) ) return true;
 
 		return false;
 		

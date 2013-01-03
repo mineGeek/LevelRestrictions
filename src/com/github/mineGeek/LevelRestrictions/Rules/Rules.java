@@ -106,7 +106,7 @@ public class Rules {
 
 	public Boolean isRestricted(Actions action, Material material, byte data, Player player ) {
 		
-		if ( this.isExcludedWorld( player.getWorld().getName() ) ) return false;
+		if ( this.isExcludedWorld( player.getWorld().getName().toLowerCase() ) ) return false;
 
 		Boolean result = false;
 		//System.out.print(material.getData());
@@ -157,7 +157,7 @@ public class Rules {
 				result = true;
 			}
 		}
-		if ( result ) System.out.print( player.getName() + " to " + material.getId() + " -- " + data);
+		//if ( result ) System.out.print( player.getName() + " to " + material.getId() + " -- " + data);
 		return result;
 		
 	}
